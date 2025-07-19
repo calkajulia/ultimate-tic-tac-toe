@@ -1,5 +1,14 @@
+package view;
+
+import controller.TickTackToeController;
+import model.TickTackToeModel;
+
 import javax.swing.*;
 import java.awt.*;
+
+import static utils.Customization.COLOR_1;
+import static utils.Customization.FONT_NAME;
+import static utils.Customization.TEXT_COLOR;
 
 public class SettingsFrame extends JFrame {
 
@@ -62,7 +71,7 @@ public class SettingsFrame extends JFrame {
         JRadioButton computerStartsButton = createRadioButton("Computer starts", computerOptionsGroup, false);
 
         JComboBox<String> difficultyLevelComboBox = new JComboBox<>(new String[]{"Easy", "Medium", "Hard"});
-        difficultyLevelComboBox.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
+        difficultyLevelComboBox.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
 
         JPanel panel = new JPanel(new GridLayout(4, 1));
         panel.setBorder(BorderFactory.createTitledBorder("Computer options"));
@@ -77,7 +86,7 @@ public class SettingsFrame extends JFrame {
 
     private JRadioButton createRadioButton(String text, ButtonGroup group, boolean selected) {
         JRadioButton button = new JRadioButton(text);
-        button.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
+        button.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
         button.setSelected(selected);
         group.add(button);
         return button;
@@ -106,9 +115,9 @@ public class SettingsFrame extends JFrame {
             button = new JButton("APPLY CHANGES");
             button.addActionListener(e -> handleApplyChangesButtonClick());
         }
-        button.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
-        button.setBackground(Customization.COLOR_1);
-        button.setForeground(Customization.TEXT_COLOR);
+        button.setFont(new Font(FONT_NAME, Font.PLAIN, 15));
+        button.setBackground(COLOR_1);
+        button.setForeground(TEXT_COLOR);
         return button;
     }
 

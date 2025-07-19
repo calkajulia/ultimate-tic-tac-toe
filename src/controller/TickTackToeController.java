@@ -1,4 +1,14 @@
+package controller;
+
+import model.TickTackToeModel;
+import view.Field;
+import view.SubBoard;
+import view.TickTackToeView;
+
 import javax.swing.*;
+
+import static utils.Customization.IMAGE_O;
+import static utils.Customization.IMAGE_X;
 
 public class TickTackToeController {
 
@@ -46,7 +56,7 @@ public class TickTackToeController {
     }
 
     private void updateField(Field field, char player) {
-        ImageIcon playerIcon = (player == 'O') ? Customization.IMAGE_O : Customization.IMAGE_X;
+        ImageIcon playerIcon = (player == 'O') ? IMAGE_O : IMAGE_X;
         field.setIcon(playerIcon);
         field.setEnabled(false);
     }

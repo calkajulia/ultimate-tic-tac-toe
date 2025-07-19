@@ -1,3 +1,5 @@
+import view.SettingsFrame;
+
 import javax.swing.*;
 
 public class TickTackToeMain {

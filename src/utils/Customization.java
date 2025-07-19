@@ -1,7 +1,9 @@
+package utils;
+
 import javax.swing.*;
 import java.awt.*;
 
-class Customization {
+public class Customization {
 
     public static final int BOARD_SIZE = 900;
     public static final int FIELD_SIZE = BOARD_SIZE / 9;
@@ -21,13 +23,13 @@ class Customization {
 
     private Customization() {}
 
-    private static ImageIcon loadImageIcon(String path, int width, int height) {
+    private static ImageIcon loadImageIcon(String fileName, int width, int height) {
         try {
-            ImageIcon originalIcon = new ImageIcon(path);
+            ImageIcon originalIcon = new ImageIcon("src/resources/" + fileName);
             Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             return new ImageIcon(scaledImage);
         } catch (Exception e) {
-            System.err.println("Couldn't load image: " + path);
+            System.err.println("Couldn't load image: " + fileName);
             return new ImageIcon();
         }
     }

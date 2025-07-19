@@ -1,8 +1,15 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
+import static utils.Customization.COLOR_1;
+import static utils.Customization.COLOR_2;
+import static utils.Customization.FIELD_SIZE;
+import static utils.Customization.FONT_NAME;
 
 public class SubBoard extends JPanel {
 
@@ -35,15 +42,15 @@ public class SubBoard extends JPanel {
 
     private void initializeBoard() {
         this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(Customization.FIELD_SIZE * 3, Customization.FIELD_SIZE * 3));
-        this.setBorder(BorderFactory.createLineBorder(Customization.COLOR_2, 3));
+        this.setPreferredSize(new Dimension(FIELD_SIZE * 3, FIELD_SIZE * 3));
+        this.setBorder(BorderFactory.createLineBorder(COLOR_2, 3));
 
         layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(Customization.FIELD_SIZE * 3, Customization.FIELD_SIZE * 3));
+        layeredPane.setPreferredSize(new Dimension(FIELD_SIZE * 3, FIELD_SIZE * 3));
         this.add(layeredPane, BorderLayout.CENTER);
 
         panel = new JPanel(new GridLayout(3, 3));
-        panel.setBounds(0, 0, Customization.FIELD_SIZE * 3, Customization.FIELD_SIZE * 3);
+        panel.setBounds(0, 0, FIELD_SIZE * 3, FIELD_SIZE * 3);
         layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
     }
 
@@ -85,9 +92,9 @@ public class SubBoard extends JPanel {
     public JButton createWinningButton(char winner) {
         JButton button  = new JButton();
         button.setText(String.valueOf(winner));
-        button.setBounds(0, 0, Customization.FIELD_SIZE * 3, Customization.FIELD_SIZE * 3);
-        button.setFont(new Font(Customization.FONT_NAME, Font.BOLD, 100));
-        button.setForeground(Customization.COLOR_1);
+        button.setBounds(0, 0, FIELD_SIZE * 3, FIELD_SIZE * 3);
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 100));
+        button.setForeground(COLOR_1);
         button.setEnabled(false);
         button.addMouseListener(new MouseAdapter() {
             @Override
