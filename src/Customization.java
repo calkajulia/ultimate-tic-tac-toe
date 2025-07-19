@@ -2,37 +2,33 @@ import javax.swing.*;
 import java.awt.*;
 
 class Customization {
-    public static int boardSize, buttonSize;
-    public static ImageIcon icon, image0, imageX;
-    public static Color buttonEnabledColor, buttonDisabledColor, buttonBorderColor;
-    public static Color northPanelColor, gameHistoryColor, subPanelBorderColor;
-    public static Color textColor;
-    public static String fontName;
 
-    static {
-        boardSize = 900;
-        buttonSize = boardSize / 9;
+    public static final int BOARD_SIZE = 900;
+    public static final int FIELD_SIZE = BOARD_SIZE / 9;
 
-        icon = loadImageIcon("icon.png", 32, 32);
-        image0 = loadImageIcon("0.png", buttonSize, buttonSize);
-        imageX = loadImageIcon("X.png", buttonSize,buttonSize);
+    public static final ImageIcon IMAGE_O = loadImageIcon("O.png", FIELD_SIZE, FIELD_SIZE);
+    public static final ImageIcon IMAGE_X = loadImageIcon("X.png", FIELD_SIZE, FIELD_SIZE);
 
-        buttonEnabledColor = new Color(0x173D14);
-        buttonDisabledColor = new Color(0xC0C0C0);
-        buttonBorderColor = Color.GRAY;
+    public static final Color COLOR_1 = new Color(0x0c1c2c);
+    public static final Color COLOR_2 = new Color(0x1f3c5a);
 
-        northPanelColor = new Color(0x0c1c2c);
-        gameHistoryColor = new Color(0x1f3c5a);
-        subPanelBorderColor = new Color(0x1f3c5a);
+    public static final Color FIELD_ENABLED_COLOR = new Color(0x173D14);
+    public static final Color FIELD_DISABLED_COLOR = new Color(0xC0C0C0);
+    public static final Color FIELD_BORDER_COLOR = Color.GRAY;
 
-        textColor = Color.WHITE;
+    public static final Color TEXT_COLOR = Color.WHITE;
+    public static final String FONT_NAME = "Berlin Sans FB";
 
-        fontName = "Berlin Sans FB";
-    }
+    private Customization() {}
 
     private static ImageIcon loadImageIcon(String path, int width, int height) {
-        ImageIcon originalIcon = new ImageIcon(path);
-        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledImage);
+        try {
+            ImageIcon originalIcon = new ImageIcon(path);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImage);
+        } catch (Exception e) {
+            System.err.println("Couldn't load image: " + path);
+            return new ImageIcon();
+        }
     }
 }

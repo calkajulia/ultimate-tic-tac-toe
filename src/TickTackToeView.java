@@ -3,45 +3,49 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class TickTackToeView extends JFrame {
+
     private JPanel boardPanel;
-    private ArrayList<SubPanel> subPanels;
+    private ArrayList<SubBoard> subBoards;
     private JLabel turnLabel;
     private JTextArea gameHistoryArea;
 
     public TickTackToeView() {
-        subPanels = new ArrayList<>();
+        subBoards = new ArrayList<>();
 
         initializeFrame();
-        initializeNorthPanel();
-        initializeBoardPanel();
-        initializeHistoryPanel();
+        initializeComponents();
         this.setVisible(true);
     }
 
     private void initializeFrame() {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(Customization.boardSize + 300, Customization.boardSize + 100);
+        this.setSize(Customization.BOARD_SIZE + 300, Customization.BOARD_SIZE + 100);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setTitle("Ultimate Tick-Tack-Toe");
-        this.setIconImage(Customization.icon.getImage());
+        this.setTitle("Ultimate Tic-Tac-Toe");
+    }
+
+    private void initializeComponents() {
+        initializeNorthPanel();
+        initializeBoardPanel();
+        initializeHistoryPanel();
     }
 
     private void initializeNorthPanel() {
         JPanel northPanel = new JPanel(new BorderLayout());
-        northPanel.setBackground(Customization.northPanelColor);
+        northPanel.setBackground(Customization.COLOR_1);
 
         turnLabel = new JLabel("0's turn");
-        turnLabel.setFont(new Font(Customization.fontName, Font.PLAIN, 50));
-        turnLabel.setBackground(Customization.northPanelColor);
-        turnLabel.setForeground(Customization.textColor);
+        turnLabel.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 50));
+        turnLabel.setBackground(Customization.COLOR_1);
+        turnLabel.setForeground(Customization.TEXT_COLOR);
         turnLabel.setOpaque(true);
         northPanel.add(turnLabel, BorderLayout.CENTER);
 
         JButton settingsButton = new JButton("Settings");
-        settingsButton.setFont(new Font(Customization.fontName, Font.PLAIN, 50));
-        settingsButton.setBackground(Customization.northPanelColor);
-        settingsButton.setForeground(Customization.textColor);
+        settingsButton.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 50));
+        settingsButton.setBackground(Customization.COLOR_1);
+        settingsButton.setForeground(Customization.TEXT_COLOR);
         settingsButton.setFocusable(false);
         settingsButton.addActionListener(e -> new SettingsFrame(false));
         northPanel.add(settingsButton, BorderLayout.EAST);
@@ -51,7 +55,7 @@ public class TickTackToeView extends JFrame {
 
     private void initializeBoardPanel() {
         boardPanel = new JPanel(new GridLayout(3, 3));
-        boardPanel.setPreferredSize(new Dimension(Customization.boardSize, Customization.boardSize));
+        boardPanel.setPreferredSize(new Dimension(Customization.BOARD_SIZE, Customization.BOARD_SIZE));
         this.add(boardPanel, BorderLayout.CENTER);
     }
 
@@ -59,17 +63,17 @@ public class TickTackToeView extends JFrame {
         JPanel historyPanel = new JPanel(new BorderLayout());
 
         JLabel gameHistoryLabel = new JLabel("Game History");
-        gameHistoryLabel.setFont(new Font(Customization.fontName, Font.PLAIN, 30));
-        gameHistoryLabel.setBackground(Customization.gameHistoryColor);
-        gameHistoryLabel.setForeground(Customization.textColor);
+        gameHistoryLabel.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 30));
+        gameHistoryLabel.setBackground(Customization.COLOR_2);
+        gameHistoryLabel.setForeground(Customization.TEXT_COLOR);
         gameHistoryLabel.setOpaque(true);
         gameHistoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
         historyPanel.add(gameHistoryLabel, BorderLayout.NORTH);
 
         gameHistoryArea = new JTextArea(20, 20);
-        gameHistoryArea.setFont(new Font(Customization.fontName, Font.PLAIN, 15));
-        gameHistoryArea.setBackground(Customization.gameHistoryColor);
-        gameHistoryArea.setForeground(Customization.textColor);
+        gameHistoryArea.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
+        gameHistoryArea.setBackground(Customization.COLOR_2);
+        gameHistoryArea.setForeground(Customization.TEXT_COLOR);
         gameHistoryArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(gameHistoryArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         historyPanel.add(scrollPane, BorderLayout.CENTER);
@@ -77,38 +81,36 @@ public class TickTackToeView extends JFrame {
         this.add(historyPanel, BorderLayout.EAST);
     }
 
-    public void addSubPanel(SubPanel subPanel) {
-        boardPanel.add(subPanel);
-        subPanels.add(subPanel);
+    public SubBoard getSubBoard(int index) {
+        return subBoards.get(index);
     }
 
-    public void updatePanels(int activePanelId, TickTackToeModel model) {
-        boolean isActivePanelWonOrDrawn = model.isSubPanelWon(activePanelId / 3, activePanelId % 3) || model.isSubPanelDraw(activePanelId / 3, activePanelId % 3);
+    public void addSubBoard(SubBoard subBoard) {
+        boardPanel.add(subBoard);
+        subBoards.add(subBoard);
+    }
 
-        for(SubPanel subPanel : subPanels) {
-            boolean isSubPanelWonOrDrawn = model.isSubPanelWon(subPanel.getId() / 3, subPanel.getId() % 3) || model.isSubPanelDraw(subPanel.getId() / 3, subPanel.getId() % 3);
-
-            if(!isSubPanelWonOrDrawn && (subPanel.getId() == activePanelId || isActivePanelWonOrDrawn))
-                enableFields(subPanel);
-            else
-                disableFields(subPanel);
+    public void setSubBoardEnabled(int index, boolean enabled) {
+        SubBoard subBoard = subBoards.get(index);
+        if(enabled) {
+            enableFields(subBoard);
+        } else {
+            disableFields(subBoard);
         }
-        this.revalidate();
-        this.repaint();
     }
 
-    private void enableFields(SubPanel subPanel) {
-        for(Field field : subPanel.fields)
+    private void enableFields(SubBoard subBoard) {
+        for(Field field : subBoard.fields)
             if(field.getIcon() == null) {
-                field.setBackground(Customization.buttonEnabledColor);
+                field.setBackground(Customization.FIELD_ENABLED_COLOR);
                 field.setEnabled(true);
             }
     }
 
-    private void disableFields(SubPanel subPanel) {
-        for(Field field : subPanel.fields)
+    private void disableFields(SubBoard subBoard) {
+        for(Field field : subBoard.fields)
             if(field.getIcon() == null) {
-                field.setBackground(Customization.buttonDisabledColor);
+                field.setBackground(Customization.FIELD_DISABLED_COLOR);
                 field.setEnabled(false);
             }
     }
@@ -118,9 +120,15 @@ public class TickTackToeView extends JFrame {
     }
 
     public void updateGameHistory(ArrayList<String> gameHistory) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for(String s : gameHistory)
-            stringBuilder.append(s).append("\n");
-        gameHistoryArea.setText(stringBuilder.toString());
+        StringBuilder sb = new StringBuilder();
+        for(String s : gameHistory) {
+            sb.append(s).append("\n");
+        }
+        gameHistoryArea.setText(sb.toString());
+    }
+
+    public void refresh() {
+        this.revalidate();
+        this.repaint();
     }
 }

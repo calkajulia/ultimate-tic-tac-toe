@@ -2,75 +2,88 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SettingsFrame extends JFrame {
+
+    private boolean startVersion;
+
     private JRadioButton playAloneButton;
     private JRadioButton playWithComputerButton;
 
     public SettingsFrame(boolean startVersion) {
-        initializeFrame(startVersion);
-        addPlayOptionsPanel();
-        JPanel computerOptionsPanel = addComputerOptionsPanel();
-        configureButtonPanel(startVersion, computerOptionsPanel);
-    }
+        this.startVersion = startVersion;
 
-    private void initializeFrame(boolean startVersion) {
-        this.setSize(400, 300);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        if(startVersion) {
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            this.setTitle("Ultimate Tick-Tack-Toe");
-        }
-        else {
-            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            this.setTitle("Settings");
-        }
-        this.setIconImage(Customization.icon.getImage());
+        initializeFrame();
+        initializeComponents();
         this.setVisible(true);
     }
 
-    private void addPlayOptionsPanel() {
+    private void initializeFrame() {
+        this.setSize(400, 300);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+
+        if(startVersion) {
+            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            this.setTitle("Ultimate Tick-Tack-Toe");
+        } else {
+            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.setTitle("Settings");
+        }
+    }
+
+    private void initializeComponents() {
+        JPanel playOptionsPanel = createPlayOptionsPanel();
+        this.add(playOptionsPanel, BorderLayout.NORTH);
+
+        JPanel computerOptionsPanel = createComputerOptionsPanel();
+        this.add(computerOptionsPanel, BorderLayout.CENTER);
+
+        addPlayOptionsButtonsListeners(computerOptionsPanel);
+
+        JButton actionButton = createActionButton();
+        this.add(actionButton, BorderLayout.SOUTH);
+    }
+
+    private JPanel createPlayOptionsPanel() {
         ButtonGroup playOptionsGroup = new ButtonGroup();
         playAloneButton = createRadioButton("Play alone", playOptionsGroup, true);
         playWithComputerButton = createRadioButton("Play with computer", playOptionsGroup, false);
 
-        JPanel playOptionsPanel = new JPanel(new GridLayout(2, 1));
-        playOptionsPanel.setBorder(BorderFactory.createTitledBorder("Game mode"));
-        playOptionsPanel.add(playAloneButton);
-        playOptionsPanel.add(playWithComputerButton);
+        JPanel panel = new JPanel(new GridLayout(2, 1));
+        panel.setBorder(BorderFactory.createTitledBorder("Game mode"));
+        panel.add(playAloneButton);
+        panel.add(playWithComputerButton);
 
-        this.add(playOptionsPanel, BorderLayout.NORTH);
+        return panel;
     }
 
-    private JPanel addComputerOptionsPanel() {
+    private JPanel createComputerOptionsPanel() {
         ButtonGroup computerOptionsGroup = new ButtonGroup();
         JRadioButton playerStartsButton = createRadioButton("Player starts", computerOptionsGroup, true);
         JRadioButton computerStartsButton = createRadioButton("Computer starts", computerOptionsGroup, false);
 
         JComboBox<String> difficultyLevelComboBox = new JComboBox<>(new String[]{"Easy", "Medium", "Hard"});
-        difficultyLevelComboBox.setFont(new Font(Customization.fontName, Font.PLAIN, 15));
+        difficultyLevelComboBox.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
 
-        JPanel computerOptionsPanel = new JPanel(new GridLayout(4, 1));
-        computerOptionsPanel.setBorder(BorderFactory.createTitledBorder("Computer options"));
-        computerOptionsPanel.add(playerStartsButton);
-        computerOptionsPanel.add(computerStartsButton);
-        computerOptionsPanel.add(new JLabel("Difficulty Level: "));
-        computerOptionsPanel.add(difficultyLevelComboBox);
+        JPanel panel = new JPanel(new GridLayout(4, 1));
+        panel.setBorder(BorderFactory.createTitledBorder("Computer options"));
+        panel.add(playerStartsButton);
+        panel.add(computerStartsButton);
+        panel.add(new JLabel("Difficulty Level: "));
+        panel.add(difficultyLevelComboBox);
+        panel.setVisible(false);
 
-        this.add(computerOptionsPanel, BorderLayout.CENTER);
-        computerOptionsPanel.setVisible(false);
-
-        return computerOptionsPanel;
+        return panel;
     }
 
     private JRadioButton createRadioButton(String text, ButtonGroup group, boolean selected) {
         JRadioButton button = new JRadioButton(text);
-        button.setFont(new Font(Customization.fontName, Font.PLAIN, 15));
+        button.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
         button.setSelected(selected);
         group.add(button);
         return button;
     }
 
-    private void configureButtonPanel(boolean startVersion, JPanel computerOptionsPanel) {
+    private void addPlayOptionsButtonsListeners(JPanel computerOptionsPanel) {
         playAloneButton.addActionListener(e -> {
             computerOptionsPanel.setVisible(false);
             revalidate();
@@ -82,27 +95,27 @@ public class SettingsFrame extends JFrame {
             revalidate();
             repaint();
         });
-
-        JButton actionButton;
-        if(startVersion) {
-            actionButton = new JButton("START");
-            actionButton.addActionListener(e -> startButtonActions(playWithComputerButton));
-        }
-        else {
-            actionButton = new JButton("APPLY CHANGES");
-            actionButton.addActionListener(e -> applyChangesButtonActions(playAloneButton));
-        }
-        actionButton.setFont(new Font(Customization.fontName, Font.PLAIN, 15));
-        actionButton.setBackground(Customization.northPanelColor);
-        actionButton.setForeground(Customization.textColor);
-        actionButton.setFocusable(false);
-        this.add(actionButton, BorderLayout.SOUTH);
     }
 
-    private void startButtonActions(JRadioButton playWithComputerButton) {
-        if(playWithComputerButton.isSelected())
+    private JButton createActionButton() {
+        JButton button;
+        if(startVersion) {
+            button = new JButton("START");
+            button.addActionListener(e -> handleStartButtonClick());
+        } else {
+            button = new JButton("APPLY CHANGES");
+            button.addActionListener(e -> handleApplyChangesButtonClick());
+        }
+        button.setFont(new Font(Customization.FONT_NAME, Font.PLAIN, 15));
+        button.setBackground(Customization.COLOR_1);
+        button.setForeground(Customization.TEXT_COLOR);
+        return button;
+    }
+
+    private void handleStartButtonClick() {
+        if(playWithComputerButton.isSelected()) {
             JOptionPane.showMessageDialog(this, "Currently playing with computer is not available");
-        else {
+        } else {
             TickTackToeModel model = new TickTackToeModel();
             TickTackToeView view = new TickTackToeView();
             new TickTackToeController(model, view);
@@ -110,10 +123,11 @@ public class SettingsFrame extends JFrame {
         }
     }
 
-    private void applyChangesButtonActions(JRadioButton playAloneButton) {
-        if(playAloneButton.isSelected())
-            JOptionPane.showMessageDialog(this, "You are already in this mode");
-        else
+    private void handleApplyChangesButtonClick() {
+        if(playWithComputerButton.isSelected()) {
             JOptionPane.showMessageDialog(this, "Currently switching between game modes is not available");
+        } else {
+            JOptionPane.showMessageDialog(this, "You are already in this mode");
+        }
     }
 }
