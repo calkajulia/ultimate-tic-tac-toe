@@ -2,6 +2,7 @@ package controller;
 
 import model.TickTackToeModel;
 import view.Field;
+import view.SettingsFrame;
 import view.SubBoard;
 import view.TickTackToeView;
 
@@ -102,21 +103,21 @@ public class TickTackToeController {
 
         if(overallWinner != '\0') {
             JOptionPane.showMessageDialog(view, "Player " + overallWinner + " won!");
-            disableAllPanels();
+            restartGame();
             return true;
         } else if(isOverallDraw) {
             JOptionPane.showMessageDialog(view, "It's a draw!");
-            disableAllPanels();
+            restartGame();
             return true;
         }
         return false;
     }
 
-    private void disableAllPanels() {
-        for(int i = 0; i < 9; i++) {
-            view.setSubBoardEnabled(i, false);
-        }
-        view.refresh();
+    private void restartGame() {
+        view.dispose();
+        SwingUtilities.invokeLater(() ->
+                new SettingsFrame(true)
+        );
     }
 
     private boolean isBoardDraw(char[][] board) {
